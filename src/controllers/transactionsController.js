@@ -1,16 +1,10 @@
 import { db } from "../config/database.js";
-import { transactionSchema } from "../schemas/transactionSchema.js";
 
 export async function inputOutputTransactions (req, res) {
-    const { authorization } = req.headers;
-    const token = authorization?.replace("Bearer ", "").trim();
-    if(!token) return res.sendStatus(401);
-
     const {value, description, type } = req.body
+    const user = res.locals.user
 
     try {
-        const user = await db.collection("sessions").findOne({token})
-        if(!user) return res.sendStatus(401)
 
         await db.collection("transactions").insertOne({
             value,

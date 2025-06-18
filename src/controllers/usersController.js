@@ -30,7 +30,7 @@ export async function signIn (req, res ) {
         
         const passwordAIsValid = bcrypt.compareSync(password, user.password)
         if(passwordAIsValid) {
-            const token = jwt.sign({}, process.env.JWT_SECRET, {expiresIn : 86400});
+            const token = jwt.sign({userId: user._id}, process.env.JWT_SECRET, {expiresIn : 86400});
             const session = {
                 token,
                 userId: user._id
