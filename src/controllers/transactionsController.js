@@ -23,9 +23,18 @@ export async function inputOutputTransactions (req, res) {
 export async function getTransactions (req, res) {
     const user = res.locals.user;
 
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+
+    if(isNaN(page) || page <= 0 ) return res.sendStatus(400);
+
+    const skip = (page - 1) * limit;
+
     try {
         const transactions = await db.collection("transactions")
         .find({userId: user._id})
+        .limit(limit)
+        .skip(skip)
         .sort({createdAt: - 1})
         .toArray();
 
