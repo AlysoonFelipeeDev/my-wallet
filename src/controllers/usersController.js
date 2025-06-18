@@ -1,7 +1,9 @@
 import { db } from "../config/database.js";
-import Joi  from "joi";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { logginSchema, registerSchema } from "../schemas/userSchema.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 export async function signUp (req,res) {
     const { name, email, password } = req.body;
@@ -39,9 +41,19 @@ export async function signIn (req, res ) {
         if(!user) return res.sendStatus(404)
         
         const passwordAIsValid = bcrypt.compareSync(password, user.password)
-        if(!passwordAIsValid) return res.sendStatus(401)
+        if(passwordAIsValid) {
+            const token = jwt.sign({}, process.env.JWT_SECRET, {expiresIn : 86400});
+            const session = {
+                token,
+                userId: user._id
+            }
+            await db.collection("sessions").insertOne(session)
+            return res.status(200).send(token)
+
+            
+        }
         
-        return res.sendStatus(200)
+        return res.sendStatus(401)
     } catch (error) {
         res.status(500).send(error.message)
     }
