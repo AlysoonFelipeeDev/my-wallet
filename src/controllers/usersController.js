@@ -1,7 +1,6 @@
 import { db } from "../config/database.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { logginSchema, registerSchema } from "../schemas/userSchema.js";
 import dotenv from "dotenv";
 dotenv.config();
 
