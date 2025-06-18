@@ -1,15 +1,10 @@
 import { db } from "../config/database.js";
 import Joi  from "joi";
 import bcrypt from "bcrypt";
+import { logginSchema, registerSchema } from "../schemas/userSchema.js";
 
 export async function signUp (req,res) {
     const { name, email, password } = req.body;
-    
-    const registerSchema = Joi.object({
-        name: Joi.string().required(),
-        email: Joi.string().required(),
-        password: Joi.string().min(6).required()
-    })
     
     const validation = registerSchema.validate(req.body, {abortEarly: false})
     if(validation.error){
@@ -32,11 +27,6 @@ export async function signUp (req,res) {
 
 export async function signIn (req, res ) {
     const { email, password } = req.body;
-
-    const logginSchema = Joi.object({
-        email: Joi.string().required(),
-        password: Joi.string().required()
-    })
 
     const validation = logginSchema.validate(req.body, {abortEarly: false})
     if(validation.error){
