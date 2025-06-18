@@ -1,5 +1,5 @@
 import { db } from "../config/database.js";
-import Joi from "joi";
+import { transactionSchema } from "../schemas/transactionSchema.js";
 
 export async function inputOutputTransactions (req, res) {
     const { authorization } = req.headers;
@@ -7,12 +7,6 @@ export async function inputOutputTransactions (req, res) {
     if(!token) return res.sendStatus(401);
 
     const {value, description, type } = req.body
-
-    const transactionSchema = Joi.object({
-        value: Joi.number().positive().required(),
-        description: Joi.string().required(),
-        type: Joi.string().valid('deposit' , 'withdraw').required()
-    })
 
     const validation = transactionSchema.validate(req.body, {abortEarly: false})
     if(validation.error) {
