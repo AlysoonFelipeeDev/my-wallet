@@ -8,12 +8,6 @@ export async function inputOutputTransactions (req, res) {
 
     const {value, description, type } = req.body
 
-    const validation = transactionSchema.validate(req.body, {abortEarly: false})
-    if(validation.error) {
-        const errors = validation.error.details.map(detail => detail.message)
-        return res.status(422).send(errors) 
-    }
-
     try {
         const user = await db.collection("sessions").findOne({token})
         if(!user) return res.sendStatus(401)
