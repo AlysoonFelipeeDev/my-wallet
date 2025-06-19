@@ -17,7 +17,7 @@ dotenv
 bcrypt
 
 📬 Rotas disponíveis
-Método	Rota	Descrição
+
 POST	/signup	Cadastrar novo usuário
 POST	/signin	Login do usuário (retorna token)
 GET	/transactions	Listar transações do usuário
