@@ -1,11 +1,11 @@
 import { db } from "../config/database.js";
+import { ObjectId } from "mongodb";
 
 export async function inputOutputTransactions (req, res) {
     const {value, description, type } = req.body
     const user = res.locals.user
 
     try {
-
         await db.collection("transactions").insertOne({
             value,
             description,
@@ -39,6 +39,26 @@ export async function getTransactions (req, res) {
         .toArray();
 
         return res.send(transactions)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+};
+
+export async function putTransactions (req, res) {
+    const user = res.locals.user;
+    const { id } = req.params;
+    const { value, description, type } = req.body
+
+    try {
+        const result = await db.collection("transactions").updateOne({ 
+            _id: new ObjectId(id), userId: user._id },
+            { $set: {
+                value, description, type
+            }})
+        if(result.matchedCount === 0) return res.sendStatus(401);
+
+        res.sendStatus(204);
+
     } catch (error) {
         res.status(500).send(error.message)
     }
