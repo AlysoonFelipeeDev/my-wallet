@@ -63,3 +63,21 @@ export async function putTransactions (req, res) {
         res.status(500).send(error.message)
     }
 };
+
+export async function deleteTransactions (req, res) {
+    const user = res.locals.user;
+    const { id } = req.params;
+
+    try {
+        const result = await db.collection("transactions").deleteOne({
+            _id: new ObjectId(id), 
+            userId: user._id
+        });
+
+        if(result.deletedCount === 0 ) return res.sendStatus(401);
+
+        res.sendStatus(204)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+};
