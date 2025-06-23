@@ -26,7 +26,7 @@ export async function validateToken (req, res, next) {
         next();
         
     } catch (error) {
-        res.status(500).send(error.message)
+        return res.sendStatus(401)
     }
 
 }
